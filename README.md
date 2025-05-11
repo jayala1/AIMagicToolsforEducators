@@ -27,10 +27,10 @@ You should see (env) appear in your terminal prompt.
 
 ⚙️ Step 4: Set Environment Variables
 Set up your inference backends via environment variables:
-$env:FLASK_APP = "open_source_magic_tools"
-$env:OPENAI_API_KEY = "your_openai_api_key"
-$env:OLLAMA_URL = "http://localhost:11434"
-You can skip OPENAI_API_KEY if only using Ollama.
+<b>$env:FLASK_APP = "open_source_magic_tools"</b>
+<b>$env:OPENAI_API_KEY = "your_openai_api_key"
+<b>$env:OLLAMA_URL = "http://localhost:11434"
+<b>You can skip OPENAI_API_KEY if only using Ollama.
 
 🚀 Step 5: Install Required Libraries
 If you don’t yet have a requirements.txt, install manually:
