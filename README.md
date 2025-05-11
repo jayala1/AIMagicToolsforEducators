@@ -19,7 +19,7 @@ Optional: A local Ollama model server (for offline use)
 git clone repository\
 cd into the folder
 
-🧰 Step 2: Create a Virtual Environment
+🧰 Step 2: Create a Virtual Environment: \
 python -m venv env
 
 ▶️ Step 3: Activate the Environment
