@@ -13,8 +13,8 @@ Git
 
 Optional: A local Ollama model server (for offline use)
 
-📦 Step 1: Clone the Repository
-git clone repository
+📦 Step 1: Clone the Repository\
+git clone repository\
 cd into the folder
 
 🧰 Step 2: Create a Virtual Environment
