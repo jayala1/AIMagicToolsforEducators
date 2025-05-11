@@ -1,5 +1,7 @@
 # AI Magic Open Tools for Educators
-An AI-powered, education-focused toolkit built with Flask. This web app integrates local inference via Ollama and cloud-based inference via OpenAI to offer a customizable interface for teachers, educators, and creators. In
+An AI-powered, education-focused toolkit built with Flask. This web app integrates local inference via Ollama and cloud-based inference via OpenAI to offer a customizable interface for teachers, educators, and creators. 
+![image](https://github.com/user-attachments/assets/f7bfec12-61ab-4071-9dcc-b7599d4abefe)
+
 
 🧪 Local Setup Instructions
 Follow these steps to get the Open Source Magic Tools app up and running locally:
