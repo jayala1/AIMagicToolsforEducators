@@ -40,9 +40,9 @@ pip install Flask openai requests\
 Or, if one is provided:\
 pip install -r requirements.txt
 
-🏃 Step 6: Run the Application
-flask run
-Then open http://127.0.0.1:5000 in your browser.
+🏃 Step 6: Run the Application \
+flask run \
+Then open http://127.0.0.1:5000 in your browser. 
 
 🔄 Optional: Regenerate Ollama Models
 If using Ollama, click Save Settings and Fetch Models on the home page to populate your model list.
