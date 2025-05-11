@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}AI Tool Suite{% endblock %} {# This title should be for the index page #}
+{% block content %}
+<h1>Welcome to the AI Tool Suite!</h1>
+<form method="POST" action="{{ url_for('main.index') }}">
+    <h2>Settings</h2>
+    <label for="inference_server">Choose Inference Server:</label>
+    <select id="inference_server" name="inference_server" onchange="toggleModelOptions()">
+        <option value="ollama" {% if inference_server == 'ollama' %}selected{% endif %}>Ollama</option>
+        {% if OPENAI_API_KEY %}
+        <option value="openai" {% if inference_server == 'openai' %}selected{% endif %}>OpenAI</option>
+        {% endif %}
+    </select><br><br>
+    <div id="ollama_options" {% if inference_server != 'ollama' %}style="display: none;"{% endif %}>
+        <label for="ollama_ip">Ollama IP/URL:</label>
+        <input type="text" id="ollama_ip" name="ollama_ip" value="{{ ollama_ip }}"><br><br>
+        <label for="ollama_model">Ollama Model:</label>
+        <select id="ollama_model" name="ollama_model">
+            {% if ollama_models %}
+                {% for model in ollama_models %}
+                    <option value="{{ model }}" {% if ollama_model == model %}selected{% endif %}>{{ model }}</option>
+                {% endfor %}
+            {% else %}
+                {# Display a disabled option if no models are found #}
+                <option value="" disabled selected>No models found or connection failed</option>
+                 {# Optionally, keep the previously selected model as a non-selectable option #}
+                 {% if ollama_model %}
+                     <option value="{{ ollama_model }}" disabled>{{ ollama_model }} (Previously Selected)</option>
+                 {% endif %}
+            {% endif %}
+        </select><br><br>
+        {% if ollama_connection_error %}
+            <p style="color: red;">{{ ollama_connection_error }}</p>
+        {% endif %}
+    </div>
+    <div id="openai_options" {% if inference_server != 'openai' %}style="display: none;"{% endif %}>
+        <label for="openai_model">OpenAI Model:</label>
+        <input type="text" id="openai_model" name="openai_model" value="{{ openai_model }}"><br><br>
+        {% if not OPENAI_API_KEY %}
+        <p style="color: red;">OpenAI API Key is not set. Please set the OPENAI_API_KEY environment variable to use OpenAI.</p>
+        {% endif %}
+    </div>
+    <button type="submit">Save Settings and Fetch Models (for Ollama)</button>
+</form>
+<h2>Available Tools</h2>
+<ul>
+    <li><a href="{{ url_for('main.social_media_post') }}">Social Media Post Generator</a></li>
+    <li><a href="{{ url_for('main.lesson_hook') }}">Lesson Hook Generator</a></li>
+    <li><a href="{{ url_for('main.math_spiral_review') }}">Math Spiral Review Generator</a></li>
+    <li><a href="{{ url_for('main.decodable_text') }}">Decodable Text Generator</a></li> {# Add this line #}
+    <li><a href="{{ url_for('main.lesson_plan') }}">Lesson Plan Generator</a></li> 
+    {# Add links to other tools here, using url_for('main.tool_name') #}
+</ul>
+<script>
+    function toggleModelOptions() {
+        var server = document.getElementById('inference_server').value;
+        if (server === 'ollama') {
+            document.getElementById('ollama_options').style.display = 'block';
+            document.getElementById('openai_options').style.display = 'none';
+        } else if (server === 'openai') {
+            document.getElementById('ollama_options').style.display = 'none';
+            document.getElementById('openai_options').style.display = 'block';
+        }
+    }
+    // Call on page load to set initial state
+    toggleModelOptions();
+</script>
+{% endblock %}

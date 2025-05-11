@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Lesson Plan Generator{% endblock %}
+
+{% block content %}
+<h1>Lesson Plan Generator</h1>
+<p>Generate a comprehensive lesson plan based on your criteria.</p>
+
+<p>Currently using: <strong>{{ inference_server | capitalize }}</strong> (Model: <strong>{{ model_name }}</strong>)</p>
+
+<form method="POST">
+    <h2>Lesson Plan Details</h2>
+
+    <label for="grade_level">Grade Level:</label><br>
+    <select id="grade_level" name="grade_level" required>
+        <option value="">-- Select Grade Level --</option>
+        {% for grade in grade_level_options %}
+            <option value="{{ grade }}" {% if grade_level == grade %}selected{% endif %}>{{ grade }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="topic_standard_objective">Topic, Standard, or Objective (required):</label><br>
+    <textarea id="topic_standard_objective" name="topic_standard_objective" rows="4" cols="50" required>{{ topic_standard_objective }}</textarea><br><br>
+
+    <label for="additional_criteria">Additional Criteria (e.g., activities, time duration):</label><br>
+    <textarea id="additional_criteria" name="additional_criteria" rows="4" cols="50">{{ additional_criteria }}</textarea><br><br>
+
+    <label for="standards_to_align">Standards to Align To (e.g., Common Core, State Standards):</label><br>
+    <textarea id="standards_to_align" name="standards_to_align" rows="4" cols="50">{{ standards_to_align }}</textarea><br><br>
+
+    <button type="submit">Generate Lesson Plan</button>
+
+    {% if generated_lesson_plan %}
+        <button type="submit" name="action" value="regenerate_lesson_plan">Regenerate Lesson Plan</button>
+    {% endif %}
+
+</form>
+
+{% if generated_lesson_plan %}
+    <h2>Generated Lesson Plan:</h2>
+    <div class="generated-output">
+        <pre id="lesson_plan_content">{{ generated_lesson_plan }}</pre>
+        <button onclick="copyLessonPlanContent()" type="button" class="copy-button">Copy Lesson Plan</button>
+    </div>
+{% endif %}
+
+<script>
+    function copyLessonPlanContent() {
+        const lessonPlanContent = document.getElementById('lesson_plan_content');
+        const textToCopy = lessonPlanContent.innerText;
+
+        navigator.clipboard.writeText(textToCopy)
+            .then(() => {
+                alert('Lesson Plan copied to clipboard!');
+            })
+            .catch(err => {
+                console.error('Failed to copy text: ', err);
+                alert('Failed to copy lesson plan.');
+            });
+    }
+</script>
+
+<style>
+    /* Reuse existing styles for generated output, copy button, and regenerate button */
+    .generated-output {
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin-top: 20px;
+        background-color: #f9f9f9;
+    }
+
+    .generated-output pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        margin: 0 0 10px 0;
+    }
+
+    .copy-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+    .copy-button:hover {
+        background-color: #0056b3;
+    }
+
+     button[name="action"][value="regenerate_lesson_plan"] {
+        background-color: #ffc107;
+        color: #212529;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+
+    button[name="action"][value="regenerate_lesson_plan"]:hover {
+         background-color: #e0a800;
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('main.index') }}">Home</a>
+        <a href="{{ url_for('main.social_media_post') }}">Social Media Post</a>
+        <a href="{{ url_for('main.lesson_hook') }}">Lesson Hook</a> {# Add this line #}
+        <a href="{{ url_for('main.math_spiral_review') }}">Math Spiral Review</a> {# Add this line #}
+        <a href="{{ url_for('main.decodable_text') }}">Decodable Text</a>
+        <a href="{{ url_for('main.lesson_plan') }}">Lesson Plan</a> 
+        {# Add links for other tools here #}
+    </nav>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

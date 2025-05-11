@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Lesson Hook Generator{% endblock %}
+
+{% block content %}
+<h1>Lesson Hook Generator</h1>
+
+<p>Currently using: <strong>{{ inference_server | capitalize }}</strong> (Model: <strong>{{ model_name }}</strong>)</p>
+
+<form method="POST">
+    <label for="subject_topic">Subject/Topic (required):</label><br>
+    <input type="text" id="subject_topic" name="subject_topic" required value="{{ subject_topic }}"><br><br>
+
+    <label for="grade_level">Grade Level or Age Group (required):</label><br>
+    <input type="text" id="grade_level" name="grade_level" required value="{{ grade_level }}"><br><br>
+
+    <label for="tone">Tone:</label><br>
+    <select id="tone" name="tone">
+        <option value="">-- Select Tone --</option>
+        <option value="exciting" {% if tone == 'exciting' %}selected{% endif %}>Exciting</option>
+        <option value="funny" {% if tone == 'funny' %}selected{% endif %}>Funny</option>
+        <option value="mysterious" {% if tone == 'mysterious' %}selected{% endif %}>Mysterious</option>
+        <option value="serious" {% if tone == 'serious' %}selected{% endif %}>Serious</option>
+        {# Add more tone options as needed #}
+    </select><br><br>
+
+    <label for="hook_type">Type of Hook (Optional):</label><br>
+    <select id="hook_type" name="hook_type">
+        <option value="">-- Select Type --</option>
+        <option value="story" {% if hook_type == 'story' %}selected{% endif %}>Story</option>
+        <option value="question" {% if hook_type == 'question' %}selected{% endif %}>Question</option>
+        <option value="demonstration idea" {% if hook_type == 'demonstration idea' %}selected{% endif %}>Demonstration Idea</option>
+        <option value="video suggestion" {% if hook_type == 'video suggestion' %}selected{% endif %}>Video Suggestion</option>
+        {# Add more hook type options as needed #}
+    </select><br><br>
+
+    <label for="time_limit">Time Limit (e.g., 1-2 minutes, up to 5 minutes):</label><br>
+    <input type="text" id="time_limit" name="time_limit" value="{{ time_limit }}"><br><br>
+
+    <label for="special_instructions">Special Instructions (optional):</label><br>
+    <textarea id="special_instructions" name="special_instructions" rows="4" cols="50">{{ special_instructions }}</textarea><br><br>
+
+    <button type="submit">Generate Hook</button>
+
+    {# Add the Regeneration Button (optional for Lesson Hook, but good to have) #}
+    {% if generated_hook %}
+        <button type="submit" name="action" value="regenerate_hook">Regenerate Hook</button>
+    {% endif %}
+</form>
+
+{% if generated_hook %}
+    <h2>Generated Lesson Hook:</h2>
+    <div class="generated-output">
+        <pre id="hook_content">{{ generated_hook }}</pre>
+        <button onclick="copyHookContent()" type="button" class="copy-button">Copy Hook</button>
+    </div>
+{% endif %}
+
+<script>
+    function copyHookContent() {
+        const hookContent = document.getElementById('hook_content');
+        const textToCopy = hookContent.innerText;
+
+        navigator.clipboard.writeText(textToCopy)
+            .then(() => {
+                alert('Hook copied to clipboard!');
+            })
+            .catch(err => {
+                console.error('Failed to copy text: ', err);
+                alert('Failed to copy hook.');
+            });
+    }
+</script>
+
+<style>
+    /* Add specific styles for this tool if needed, or reuse general styles */
+    .generated-output {
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin-top: 20px;
+        background-color: #f9f9f9;
+    }
+
+    .generated-output pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        margin: 0 0 10px 0;
+    }
+
+    .copy-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+    .copy-button:hover {
+        background-color: #0056b3;
+    }
+
+    button[name="action"][value="regenerate_hook"] {
+        background-color: #ffc107;
+        color: #212529;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+
+    button[name="action"][value="regenerate_hook"]:hover {
+         background-color: #e0a800;
+    }
+</style>
+
+{% endblock %}

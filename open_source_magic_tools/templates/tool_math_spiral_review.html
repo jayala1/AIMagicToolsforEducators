@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Math Spiral Review Generator{% endblock %}
+
+{% block content %}
+<h1>AI-Powered Math Spiral Review Generator</h1>
+<p>Quickly create daily math reviews to boost memory, confidence, and mastery!</p>
+
+<p>Currently using: <strong>{{ inference_server | capitalize }}</strong> (Model: <strong>{{ model_name }}</strong>)</p>
+
+<form method="POST">
+    <h2>User Inputs</h2>
+
+    <label for="grade_level">Grade Level:</label><br>
+    <select id="grade_level" name="grade_level" required>
+        <option value="">-- Select Grade Level --</option>
+        {% for grade in grade_level_options %}
+            <option value="{{ grade }}" {% if grade_level == grade %}selected{% endif %}>{{ grade }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label>Topics to Include:</label><br>
+    {% for topic in common_topics %}
+        <input type="checkbox" id="topic_{{ loop.index }}" name="topics_covered" value="{{ topic }}" {% if topic in topics_covered %}checked{% endif %}>
+        <label for="topic_{{ loop.index }}">{{ topic }}</label><br>
+    {% endfor %}
+    <br>
+
+    <label for="todays_focus">Today's Focus (Optional):</label><br>
+    <input type="text" id="todays_focus" name="todays_focus" value="{{ todays_focus }}"><br><br>
+
+    <label>Difficulty Level:</label><br>
+    {% for diff in difficulty_options %}
+        <input type="radio" id="difficulty_{{ loop.index }}" name="difficulty" value="{{ diff }}" {% if difficulty == diff %}checked{% endif %}>
+        <label for="difficulty_{{ loop.index }}">{{ diff }}</label><br>
+    {% endfor %}
+    <br>
+
+    <label for="num_questions">Number of Questions:</label><br>
+    <input type="number" id="num_questions" name="num_questions" min="1" max="20" required value="{{ num_questions }}"><br><br>
+
+    <label>Question Type:</label><br>
+    {% for type in question_type_options %}
+        <input type="checkbox" id="type_{{ loop.index }}" name="question_types" value="{{ type }}" {% if type in question_types %}checked{% endif %}>
+        <label for="type_{{ loop.index }}">{{ type }}</label><br>
+    {% endfor %}
+    <br>
+
+    <label for="special_instructions">Special Instructions (Optional):</label><br>
+    <textarea id="special_instructions" name="special_instructions" rows="4" cols="50">{{ special_instructions }}</textarea><br><br>
+
+    <button type="submit">Generate Spiral Review</button>
+
+    {% if generated_review %}
+        <button type="submit" name="action" value="regenerate_review">Regenerate Review</button>
+    {% endif %}
+
+</form>
+
+{% if generated_review %}
+    <h2>Generated Math Spiral Review:</h2>
+    <div class="generated-output">
+        <pre id="review_content">{{ generated_review }}</pre>
+        <button onclick="copyReviewContent()" type="button" class="copy-button">Copy Review</button>
+    </div>
+{% endif %}
+
+<script>
+    function copyReviewContent() {
+        const reviewContent = document.getElementById('review_content');
+        const textToCopy = reviewContent.innerText;
+
+        navigator.clipboard.writeText(textToCopy)
+            .then(() => {
+                alert('Review copied to clipboard!');
+            })
+            .catch(err => {
+                console.error('Failed to copy text: ', err);
+                alert('Failed to copy review.');
+            });
+    }
+</script>
+
+<style>
+    /* Reuse existing styles or add specific styles for this tool */
+    .generated-output {
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin-top: 20px;
+        background-color: #f9f9f9;
+    }
+
+    .generated-output pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        margin: 0 0 10px 0;
+    }
+
+    .copy-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+    .copy-button:hover {
+        background-color: #0056b3;
+    }
+
+     button[name="action"][value="regenerate_review"] {
+        background-color: #ffc107;
+        color: #212529;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+
+    button[name="action"][value="regenerate_review"]:hover {
+         background-color: #e0a800;
+    }
+</style>
+
+{% endblock %}

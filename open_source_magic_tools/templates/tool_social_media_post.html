@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Social Media Post Generator{% endblock %}
+
+{% block content %}
+<h1>Social Media Post Generator</h1>
+
+<p>Currently using: <strong>{{ inference_server | capitalize }}</strong> (Model: <strong>{{ model_name }}</strong>)</p>
+
+<form method="POST">
+    <label for="topic">Topic (required):</label><br>
+    <input type="text" id="topic" name="topic" required value="{{ request.form.get('topic', '') }}"><br><br> {# Added value to retain input #}
+
+    <label for="audience">Audience:</label><br>
+    <input type="text" id="audience" name="audience" value="{{ request.form.get('audience', '') }}"><br><br> {# Added value to retain input #}
+
+    <label for="tone">Tone:</label><br>
+    <input type="text" id="tone" name="tone" value="{{ request.form.get('tone', '') }}"><br><br> {# Added value to retain input #}
+
+    <button type="submit">Generate Post</button>
+     {# Add the Regeneration Button #}
+    {% if generated_post %} {# Only show regenerate button if a post has been generated #}
+        <button type="submit" name="action" value="regenerate">Regenerate Post</button>
+    {% endif %}
+</form>
+
+{% if generated_post %}
+    <h2>Generated Post:</h2>
+    <div class="generated-output">
+        <pre id="post_content">{{ generated_post }}</pre>
+         {# Move the Copy Post button here #}
+        <button onclick="copyPostContent()" type="button" class="copy-button">Copy Post</button> {# Changed type to button to prevent form submission #}
+    </div>
+{% endif %}
+
+<script>
+    function copyPostContent() {
+        const postContent = document.getElementById('post_content');
+        const textToCopy = postContent.innerText;
+
+        navigator.clipboard.writeText(textToCopy)
+            .then(() => {
+                alert('Post copied to clipboard!');
+            })
+            .catch(err => {
+                console.error('Failed to copy text: ', err);
+                alert('Failed to copy post.');
+            });
+    }
+
+    // Optional: Keep the form inputs after submission
+    // This is handled by adding value="{{ request.form.get('field_name', '') }}" to inputs
+</script>
+
+<style>
+    .generated-output {
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin-top: 20px;
+        background-color: #f9f9f9;
+        /* Adjusted: Removed position: relative as button is no longer absolute */
+    }
+
+    .generated-output pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        margin: 0 0 10px 0; /* Added margin below pre to separate from button */
+    }
+
+    .copy-button {
+        /* Adjusted: Removed absolute positioning */
+        /* position: absolute; */
+        /* top: 10px; */
+        /* right: 10px; */
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+        display: inline-block; /* Make it an inline block */
+    }
+
+    .copy-button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Style for the regeneration button */
+    button[name="action"][value="regenerate"] {
+        background-color: #ffc107; /* Example color, adjust as needed */
+        color: #212529;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        margin-left: 10px; /* Add some space between buttons */
+    }
+
+    button[name="action"][value="regenerate"]:hover {
+         background-color: #e0a800;
+    }
+
+</style>
+
+{% endblock %}

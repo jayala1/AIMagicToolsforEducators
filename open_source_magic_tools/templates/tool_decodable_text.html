@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Decodable Text Generator{% endblock %}
+
+{% block content %}
+<h1>Decodable Text Generator</h1>
+<p>Generate decodable texts based on specific phonics patterns to support early literacy.</p>
+
+<p>Currently using: <strong>{{ inference_server | capitalize }}</strong> (Model: <strong>{{ model_name }}</strong>)</p>
+
+<form method="POST">
+    <h2>Select Phonics Patterns</h2>
+
+    <p>Choose the phonics patterns you want the text to focus on:</p>
+
+    <div class="phonics-patterns-list">
+        {% for pattern in phonics_patterns %}
+            <input type="checkbox" id="pattern_{{ loop.index }}" name="phonics_patterns" value="{{ pattern }}" {% if pattern in selected_patterns %}checked{% endif %}>
+            <label for="pattern_{{ loop.index }}">{{ pattern }}</label><br>
+        {% endfor %}
+    </div>
+    <br>
+
+    <label for="num_texts">Number of Texts to Generate:</label><br>
+    <input type="number" id="num_texts" name="num_texts" min="1" value="{{ num_texts }}"><br><br>
+
+    <label for="special_instructions">Special Instructions (Optional):</label><br>
+    <textarea id="special_instructions" name="special_instructions" rows="4" cols="50">{{ special_instructions }}</textarea><br><br>
+
+    <button type="submit">Generate Decodable Text</button>
+
+    {% if generated_text %}
+        <button type="submit" name="action" value="regenerate_text">Regenerate Text</button>
+    {% endif %}
+
+</form>
+
+{% if generated_text %}
+    <h2>Generated Decodable Text:</h2>
+    <div class="generated-output">
+        <pre id="text_content">{{ generated_text }}</pre>
+        <button onclick="copyTextContent()" type="button" class="copy-button">Copy Text</button>
+    </div>
+{% endif %}
+
+<script>
+    function copyTextContent() {
+        const textContent = document.getElementById('text_content');
+        const textToCopy = textContent.innerText;
+
+        navigator.clipboard.writeText(textToCopy)
+            .then(() => {
+                alert('Text copied to clipboard!');
+            })
+            .catch(err => {
+                console.error('Failed to copy text: ', err);
+                alert('Failed to copy text.');
+            });
+    }
+</script>
+
+<style>
+    /* Add styles for the phonics patterns list for better layout */
+    .phonics-patterns-list {
+        border: 1px solid #ccc;
+        padding: 10px;
+        max-height: 200px; /* Add a max height and scrollbar if the list is long */
+        overflow-y: auto;
+        background-color: #f9f9f9;
+    }
+
+    .phonics-patterns-list label {
+       font-weight: normal; /* Override bold from general label style */
+    }
+
+
+    /* Reuse existing styles for generated output, copy button, and regenerate button */
+    .generated-output {
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin-top: 20px;
+        background-color: #f9f9f9;
+    }
+
+    .generated-output pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        margin: 0 0 10px 0;
+    }
+
+    .copy-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+    .copy-button:hover {
+        background-color: #0056b3;
+    }
+
+     button[name="action"][value="regenerate_text"] {
+        background-color: #ffc107;
+        color: #212529;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+
+    button[name="action"][value="regenerate_text"]:hover {
+         background-color: #e0a800;
+    }
+</style>
+
+{% endblock %}
